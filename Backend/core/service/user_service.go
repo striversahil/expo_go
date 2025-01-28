@@ -3,8 +3,9 @@
 package service
 
 import (
-    "myapp/core/model"
-    "myapp/core/repository"
+	"errors"
+	"myapp/core/model"
+	"myapp/core/repository"
 )
 
 type UserService struct {
@@ -17,7 +18,11 @@ func NewUserService(repo *repository.UserRepository) *UserService {
 
 func (s *UserService) CreateUser(user *model.User) (*model.User, error) {
     // Business logic (e.g., validation)
-    err := s.repo.Save(user)
+    err := s.repo.UserExist(user) 
+    if err == nil{
+        return nil, errors.New("User already exists")
+    }
+    err = s.repo.Save(user)
     if err != nil {
         return nil, err
     }

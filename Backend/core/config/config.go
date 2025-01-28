@@ -9,6 +9,7 @@ type Config struct {
     DbPassword string
     DbName     string
     JwtSecret  string
+    ServerHost string
 }
 
 func LoadConfig() (*Config, error){
@@ -19,5 +20,6 @@ func LoadConfig() (*Config, error){
         DbPassword: os.Getenv("DB_PASSWORD"),
         DbName:     os.Getenv("DB_NAME"),
         JwtSecret:  os.Getenv("JWT_SECRET"),
+        ServerHost: os.Getenv("SERVER_HOST"),
     }, nil
 }

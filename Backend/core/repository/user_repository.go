@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"myapp/core/config"
 	"myapp/core/model"
+    _ "github.com/lib/pq"
 	// "golang.org/x/crypto/bcrypt"
 )
 
@@ -25,6 +26,12 @@ func NewUserRepository(config *config.Config ) *UserRepository {
         panic(err)
     }
     return &UserRepository{db: db}
+}
+
+
+func (r *UserRepository) UserExist(user *model.User) error {
+    _,err := r.db.Exec("SELECT * FROM users WHERE email = $1", user.Email)
+    return err
 }
 
 func (r *UserRepository) Save(user *model.User) error {

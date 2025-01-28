@@ -36,9 +36,12 @@ func main() {
 
     // Define routes
     http.HandleFunc("/signup", userHandler.RegisterHandler)
-    http.HandleFunc("/login", userHandler.Login)
-
+    // http.HandleFunc("/login", userHandler.Login)
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Content-Type", "application/json")
+        w.Write([]byte(`{"message": "Welcome to myapp", "version": "1.0", "status": "OK"}`))
+    })
     // Start the server
-    log.Printf("Server is running on %s...\n", cfg.DbHost)
-    log.Fatal(http.ListenAndServe(cfg.DbHost, nil))
+    log.Printf("Server is running on %s...\n", cfg.ServerHost)
+    log.Fatal(http.ListenAndServe(cfg.ServerHost, nil))
 }
