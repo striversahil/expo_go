@@ -4,20 +4,29 @@ package main
 
 import (
 	"log"
-	"mybackend/core/config"
-	"mybackend/internal/config"
+	"myapp/core/config"
 	"net/http"
-	"user-management/internal/api/handlers"
+	"myapp/core/api/handlers"
 	"myapp/core/repository"
-	"user-management/internal/service"
+	"myapp/core/service"
+    "github.com/joho/godotenv"
 )
 
 func main() {
     // Load configuration (e.g., database URL, server port)
-    cfg := config.LoadConfig()
+
+    err := godotenv.Load()
+    if err != nil {
+        log.Fatal("Error loading .env file")
+    }
+    cfg , err := config.LoadConfig()
+
+    if err != nil {
+        log.Fatal(err)
+    }
 
     // Set up the database repository
-    userRepo := repository.NewUserRepository(cfg.DatabaseURL)
+    userRepo := repository.NewUserRepository(cfg)
 
     // Set up the service (business logic)
     userService := service.NewUserService(userRepo)
@@ -26,10 +35,10 @@ func main() {
     userHandler := handlers.NewUserHandler(userService)
 
     // Define routes
-    http.HandleFunc("/signup", userHandler.Signup)
+    http.HandleFunc("/signup", userHandler.RegisterHandler)
     http.HandleFunc("/login", userHandler.Login)
 
     // Start the server
-    log.Printf("Server is running on %s...\n", cfg.ServerPort)
-    log.Fatal(http.ListenAndServe(cfg.ServerPort, nil))
+    log.Printf("Server is running on %s...\n", cfg.DbHost)
+    log.Fatal(http.ListenAndServe(cfg.DbHost, nil))
 }

@@ -3,6 +3,8 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
+	"myapp/core/config"
 	"myapp/core/model"
 	// "golang.org/x/crypto/bcrypt"
 )
@@ -11,7 +13,9 @@ type UserRepository struct {
     db *sql.DB
 }
 
-func NewUserRepository(databaseURL string) *UserRepository {
+func NewUserRepository(config *config.Config ) *UserRepository {
+    databaseURL := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+     config.DbHost, config.DbPort, config.DbUser, config.DbPassword, config.DbName)
     db, err := sql.Open("postgres", databaseURL)
     if err != nil {
         panic(err)

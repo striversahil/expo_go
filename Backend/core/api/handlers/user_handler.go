@@ -5,14 +5,18 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	// "strings"
+	_ "strings"
 	"myapp/core/service"
     	"myapp/core/model"
 )
 
 type UserHandler struct {
-	userService service.UserService
+	userService *service.UserService
 }
+
+func NewUserHandler(userService *service.UserService) *UserHandler {
+	return &UserHandler{userService: userService}
+  }
 
 func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var req struct {
