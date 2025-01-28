@@ -1,4 +1,4 @@
-module myauthapp
+module mybackend
 
 go 1.23.5
 
