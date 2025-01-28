@@ -25,7 +25,14 @@ func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user , err := uh.userService.CreateUser(&model.User{Name: req.Username, Email: req.Email, Password: req.Password})
+	if req.Username == "" || req.Email == "" || req.Password == "" {
+		http.Error(w, "Missing required fields", http.StatusBadRequest)
+		return
+	}
+
+	user_info := &model.User{Name: req.Username, Email: req.Email, Password: req.Password}
+
+	user , err := uh.userService.CreateUser(user_info)
 	if err != nil {
 		http.Error(w, "Failed to create user", http.StatusInternalServerError)
 		return
