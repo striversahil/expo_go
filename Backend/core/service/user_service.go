@@ -3,7 +3,7 @@
 package service
 
 import (
-    "myapp/internal/models"
+    "myapp/core/model"
     "myapp/core/repository"
 )
 
@@ -15,7 +15,7 @@ func NewUserService(repo repository.UserRepository) *UserService {
     return &UserService{repo: repo}
 }
 
-func (s *UserService) CreateUser(user *models.User) error {
+func (s *UserService) CreateUser(user *model.User) error {
     // Business logic (e.g., validation)
-    return s.repo.Create(user)
+    return s.repo.Save(user)
 }

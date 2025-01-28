@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
-	    "myapp/internal/service"
-    "myapp/internal/models"
+	"myapp/core/service"
+    	"myapp/core/model"
 )
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {

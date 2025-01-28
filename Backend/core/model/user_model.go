@@ -1,5 +1,5 @@
 // The Models for my Database
-package domain
+package model
 
 type User struct {
     ID    int

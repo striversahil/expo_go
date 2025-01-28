@@ -23,7 +23,7 @@ func NewUserRepository(databaseURL string) *UserRepository {
     return &UserRepository{db: db}
 }
 
-func (r *UserRepository) Save(user *domain.User) error {
+func (r *UserRepository) Save(user *model.User) error {
     // Save user to the database
     _, err := r.db.Exec("INSERT INTO users (name, email, password) VALUES ($1, $2, $3)", user.Name, user.Email, user.Password)
     return err
