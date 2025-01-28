@@ -4,6 +4,7 @@ package service
 
 import (
 	"errors"
+	_"log"
 	"myapp/core/model"
 	"myapp/core/repository"
 )
@@ -18,10 +19,15 @@ func NewUserService(repo *repository.UserRepository) *UserService {
 
 func (s *UserService) CreateUser(user *model.User) (*model.User, error) {
     // Business logic (e.g., validation)
-    err := s.repo.UserExist(user) 
-    if err == nil{
-        return nil, errors.New("User already exists")
+    // Checking if user already exists
+    userexist , err := s.repo.FindByEmail(user.Email) 
+    if userexist.Email != "" {
+        return nil, errors.New("user already exists")
     }
+    // if err != nil {
+    //     return nil, err
+    // }
+    // Save user to the database
     err = s.repo.Save(user)
     if err != nil {
         return nil, err

@@ -29,23 +29,18 @@ func NewUserRepository(config *config.Config ) *UserRepository {
 }
 
 
-func (r *UserRepository) UserExist(user *model.User) error {
-    _,err := r.db.Exec("SELECT * FROM users WHERE email = $1", user.Email)
-    return err
-}
-
 func (r *UserRepository) Save(user *model.User) error {
     // Save user to the database
     _, err := r.db.Exec("INSERT INTO users (name, email, password) VALUES ($1, $2, $3)", user.Name, user.Email, user.Password)
     return err
 }
 
-// func (r *UserRepository) FindByEmail(email string) (*domain.User, error) {
-//     // Fetch user by email
-//     var user domain.User
-//     err := r.db.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
-//     return &user, err
-// }
+func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
+    // Fetch user by email
+    var user model.User
+    err := r.db.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+    return &user, err
+}
 
 
 // func (u *User) HashPassword(password string) error {

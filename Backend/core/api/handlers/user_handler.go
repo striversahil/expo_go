@@ -4,10 +4,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
+	"myapp/core/model"
+	"myapp/core/service"
 	"net/http"
 	_ "strings"
-	"myapp/core/service"
-    	"myapp/core/model"
 )
 
 type UserHandler struct {
@@ -39,6 +40,7 @@ func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	user , err := uh.userService.CreateUser(user_info)
 	if err != nil {
 		http.Error(w, "Failed to create user", http.StatusInternalServerError)
+		log.Default().Println(err)
 		return
 	}
 
