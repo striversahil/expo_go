@@ -1,8 +1,9 @@
+// This is Connection with Database and Db executable defination goes here
 package repository
 
 import (
 	"database/sql"
-	"mybackend/core/model"
+	"myapp/core/model"
 	// "golang.org/x/crypto/bcrypt"
 )
 
@@ -15,6 +16,10 @@ func NewUserRepository(databaseURL string) *UserRepository {
     if err != nil {
         panic(err)
     }
+    _ , err = db.Exec("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), password VARCHAR(255))")
+    if err != nil {
+        panic(err)
+    }
     return &UserRepository{db: db}
 }
 
@@ -24,12 +29,12 @@ func (r *UserRepository) Save(user *domain.User) error {
     return err
 }
 
-func (r *UserRepository) FindByEmail(email string) (*domain.User, error) {
-    // Fetch user by email
-    var user domain.User
-    err := r.db.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
-    return &user, err
-}
+// func (r *UserRepository) FindByEmail(email string) (*domain.User, error) {
+//     // Fetch user by email
+//     var user domain.User
+//     err := r.db.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+//     return &user, err
+// }
 
 
 // func (u *User) HashPassword(password string) error {

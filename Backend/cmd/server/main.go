@@ -1,3 +1,5 @@
+// This serves as the entry point for the application.
+
 package main
 
 import (
@@ -6,7 +8,7 @@ import (
 	"mybackend/internal/config"
 	"net/http"
 	"user-management/internal/api/handlers"
-	"user-management/internal/repository"
+	"myapp/core/repository"
 	"user-management/internal/service"
 )
 

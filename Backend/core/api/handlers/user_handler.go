@@ -1,9 +1,13 @@
+// This is Where i will write Controller's for my routes which will talk to service
+
 package handlers
 
 import (
 	"encoding/json"
 	"net/http"
 	"strings"
+	    "myapp/internal/service"
+    "myapp/internal/models"
 )
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {

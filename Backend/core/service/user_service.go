@@ -1,18 +1,21 @@
+// Abstraction of business logic for handlers talking model and repository/db
+
 package service
 
 import (
-	"mybackend/core/model"
-	"mybackend/core/repository"
+    "myapp/internal/models"
+    "myapp/core/repository"
 )
 
 type UserService struct {
-    userRepo *repository.UserRepository
+    repo repository.UserRepository
 }
 
-func NewUserService(userRepo *repository.UserRepository) *UserService {
-    return &UserService{userRepo: userRepo}
+func NewUserService(repo repository.UserRepository) *UserService {
+    return &UserService{repo: repo}
 }
 
-func (s *UserService) GetAllUsers() ([]domain.User, error) {
-    return s.userRepo.GetAllUsers()
+func (s *UserService) CreateUser(user *models.User) error {
+    // Business logic (e.g., validation)
+    return s.repo.Create(user)
 }
