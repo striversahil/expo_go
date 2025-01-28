@@ -15,7 +15,11 @@ func NewUserService(repo repository.UserRepository) *UserService {
     return &UserService{repo: repo}
 }
 
-func (s *UserService) CreateUser(user *model.User) error {
+func (s *UserService) CreateUser(user *model.User) (*model.User, error) {
     // Business logic (e.g., validation)
-    return s.repo.Save(user)
+    err := s.repo.Save(user)
+    if err != nil {
+        return nil, err
+    }
+    return user, nil
 }
