@@ -4,9 +4,11 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	// "log"
 	"myapp/core/config"
 	"myapp/core/model"
-    _ "github.com/lib/pq"
+
+	_ "github.com/lib/pq"
 	// "golang.org/x/crypto/bcrypt"
 )
 
@@ -38,14 +40,9 @@ func (r *UserRepository) Save(user *model.User) error {
 func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
     // Fetch user by email
     var user model.User
+    // log.Default().Println(email , user)
     err := r.db.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
-    return &user, err
-}
-
-func (r *UserRepository) FindByUsername(username string) (*model.User, error) {
-    // Fetch user by email
-    var user model.User
-    err := r.db.QueryRow("SELECT id, name, email, password FROM users WHERE name = $1", username).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+    // log.Default().Println(err)
     return &user, err
 }
 

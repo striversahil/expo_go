@@ -3,7 +3,9 @@
 package handlers
 
 import (
+	// "database/sql"
 	"encoding/json"
+	// "errors"
 	"log"
 	"myapp/core/model"
 	"myapp/core/repository"
@@ -53,7 +55,7 @@ func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 func (uh *UserHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var req struct {
-		Username string `json:"username"`
+		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -61,13 +63,16 @@ func (uh *UserHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
-
-	user, err := uh.user_repository.FindByUsername(req.Username)
-	if user.Email == "" && err == nil {
-		// http.Error(w, "User not found", http.StatusUnauthorized)
+	
+	user, err := uh.userService.GetUser(&model.User{Email: req.Email})
+	if err != nil {
+		// Handle other errors (e.g., database issues)
 		json.NewEncoder(w).Encode(map[string]string{"Verification Status": "User not found ❌"})
 		return
 	}
+	
+	// At this point, user is valid and not nil
+	// Proceed with login logic (e.g., password check)
 
 	if user.Password != req.Password {
 		// http.Error(w, "Invalid password", http.StatusUnauthorized)
