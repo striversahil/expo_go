@@ -6,9 +6,8 @@ import (
 	// "database/sql"
 	"encoding/json"
 	// "errors"
-	"log"
+	_"log"
 	"myapp/core/model"
-	"myapp/core/repository"
 	"myapp/core/service"
 	"myapp/core/utils"
 	"net/http"
@@ -17,14 +16,13 @@ import (
 
 type UserHandler struct {
 	userService *service.UserService
-	user_repository *repository.UserRepository
 }
 
 func NewUserHandler(userService *service.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
   }
 
-func (uh *UserHandler) RegisterHandler( r *http.Request) {
+func (uh *UserHandler) RegisterHandler( w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Username string `json:"username"`
 		Email    string `json:"email"`
@@ -49,8 +47,10 @@ func (uh *UserHandler) RegisterHandler( r *http.Request) {
 		return
 	}
 	utils.NewRespose(w, "User created successfully", http.StatusCreated, user)
+}
+// 
 
-func (uh *UserHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
+func (uh *UserHandler) LoginHandler( w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
@@ -64,7 +64,7 @@ func (uh *UserHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	user, err := uh.userService.GetUser(&model.User{Email: req.Email})
 	if err != nil {
 		// Handle other errors (e.g., database issues)
-		json.NewEncoder(w).Encode(map[string]string{"Verification Status": "User not found ❌"})
+		utils.ErrorResponse(w, "User not found ❌", http.StatusInternalServerError)
 		return
 	}
 	
@@ -73,11 +73,11 @@ func (uh *UserHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if user.Password != req.Password {
 		// http.Error(w, "Invalid password", http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(map[string]string{"Verification Status": "Invalid password ❌"})
+		utils.ErrorResponse(w, "Invalid password ❌", http.StatusUnauthorized)
 		return
 	}
 
-	json.NewEncoder(w).Encode(map[string]string{"Verification Status": "Verified ✅"})
+	utils.NewRespose(w, "Login successful", http.StatusOK, user)
 }
 
 // func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
