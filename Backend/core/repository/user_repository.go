@@ -23,7 +23,7 @@ func NewUserRepository(config *config.Config ) *UserRepository {
     if err != nil {
         panic(err)
     }
-    _ , err = db.Exec("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), password VARCHAR(255))")
+    _ , err = db.Exec("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), password VARCHAR(255) , token VARCHAR(255))")
     if err != nil {
         panic(err)
     }
@@ -33,7 +33,7 @@ func NewUserRepository(config *config.Config ) *UserRepository {
 
 func (r *UserRepository) Save(user *model.User) error {
     // Save user to the database
-    _, err := r.db.Exec("INSERT INTO users (name, email, password) VALUES ($1, $2, $3)", user.Name, user.Email, user.Password)
+    _, err := r.db.Exec("INSERT INTO users (name, email, password , token) VALUES ($1, $2, $3 , $4)", user.Name, user.Email, user.Password , user.Token)
     return err
 }
 
@@ -41,7 +41,7 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
     // Fetch user by email
     var user model.User
     // log.Default().Println(email , user)
-    err := r.db.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+    err := r.db.QueryRow("SELECT * FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password , &user.Token)
     // log.Default().Println(err)
     return &user, err
 }

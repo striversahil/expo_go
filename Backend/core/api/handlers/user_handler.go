@@ -6,7 +6,7 @@ import (
 	// "database/sql"
 	"encoding/json"
 	// "errors"
-	_"log"
+	_ "log"
 	"myapp/core/model"
 	"myapp/core/service"
 	"myapp/core/utils"
@@ -21,6 +21,11 @@ type UserHandler struct {
 func NewUserHandler(userService *service.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
   }
+
+
+var jwtSecret = []byte("secret")
+
+
 
 func (uh *UserHandler) RegisterHandler( w http.ResponseWriter, r *http.Request) {
 	var req struct {
@@ -48,7 +53,6 @@ func (uh *UserHandler) RegisterHandler( w http.ResponseWriter, r *http.Request) 
 	}
 	utils.NewRespose(w, "User created successfully", http.StatusCreated, user)
 }
-// 
 
 func (uh *UserHandler) LoginHandler( w http.ResponseWriter, r *http.Request) {
 	var req struct {
@@ -64,7 +68,7 @@ func (uh *UserHandler) LoginHandler( w http.ResponseWriter, r *http.Request) {
 	user, err := uh.userService.GetUser(&model.User{Email: req.Email})
 	if err != nil {
 		// Handle other errors (e.g., database issues)
-		utils.ErrorResponse(w, "User not found ❌", http.StatusInternalServerError)
+		utils.ErrorResponse(w, "User not found", http.StatusInternalServerError)
 		return
 	}
 	
@@ -73,7 +77,7 @@ func (uh *UserHandler) LoginHandler( w http.ResponseWriter, r *http.Request) {
 
 	if user.Password != req.Password {
 		// http.Error(w, "Invalid password", http.StatusUnauthorized)
-		utils.ErrorResponse(w, "Invalid password ❌", http.StatusUnauthorized)
+		utils.ErrorResponse(w, "Invalid password", http.StatusUnauthorized)
 		return
 	}
 
