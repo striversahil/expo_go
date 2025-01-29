@@ -10,6 +10,7 @@ import (
 	"myapp/core/model"
 	"myapp/core/repository"
 	"myapp/core/service"
+	"myapp/core/utils"
 	"net/http"
 	_ "strings"
 )
@@ -23,7 +24,7 @@ func NewUserHandler(userService *service.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
   }
 
-func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
+func (uh *UserHandler) RegisterHandler( r *http.Request) {
 	var req struct {
 		Username string `json:"username"`
 		Email    string `json:"email"`
@@ -31,12 +32,12 @@ func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// New Decoder takes what to decode and put's it in the struct by Decode
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request", http.StatusBadRequest)
+		utils.ErrorResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	
 	if req.Username == "" || req.Email == "" || req.Password == "" {
-		http.Error(w, "Missing required fields", http.StatusBadRequest)
+		utils.ErrorResponse(w, "Missing required fields", http.StatusBadRequest)
 		return
 	}
 	
@@ -44,14 +45,10 @@ func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	
 	user , err := uh.userService.CreateUser(user_info)
 	if err != nil {
-		http.Error(w, "Failed to create user", http.StatusInternalServerError)
-		log.Default().Println(err)
+		utils.ErrorResponse(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
-}
+	utils.NewRespose(w, "User created successfully", http.StatusCreated, user)
 
 func (uh *UserHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var req struct {
