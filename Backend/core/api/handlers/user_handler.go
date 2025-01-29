@@ -69,7 +69,7 @@ func (uh *UserHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := uh.userService.CheckPassword(req); err != nil {
+	if user.Password != req.Password {
 		// http.Error(w, "Invalid password", http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(map[string]string{"Verification Status": "Invalid password ❌"})
 		return

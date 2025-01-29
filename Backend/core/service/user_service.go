@@ -32,9 +32,3 @@ func (s *UserService) CreateUser(user *model.User) (*model.User, error) {
     return user, nil
 }
 
-
-func (s *UserService) CheckPassword(req struct{ Username, Password string }) error {
-    // Business logic (e.g., validation)
-
-    return nil
-}
