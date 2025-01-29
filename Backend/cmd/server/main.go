@@ -36,7 +36,7 @@ func main() {
 
     // Define routes
     http.HandleFunc("/signup", userHandler.RegisterHandler)
-    // http.HandleFunc("/login", userHandler.Login)
+    http.HandleFunc("/login", userHandler.LoginHandler)
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Content-Type", "application/json")
         w.Write([]byte(`{"message": "Welcome to myapp", "version": "1.0", "status": "OK"}`))

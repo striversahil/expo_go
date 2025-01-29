@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"log"
 	"myapp/core/model"
+	"myapp/core/repository"
 	"myapp/core/service"
 	"net/http"
 	_ "strings"
@@ -13,6 +14,7 @@ import (
 
 type UserHandler struct {
 	userService *service.UserService
+	user_repository *repository.UserRepository
 }
 
 func NewUserHandler(userService *service.UserService) *UserHandler {
@@ -49,36 +51,32 @@ func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-// func LoginHandler(w http.ResponseWriter, r *http.Request) {
-// 	var req struct {
-// 		Username string `json:"username"`
-// 		Password string `json:"password"`
-// 	}
-// 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-// 		http.Error(w, "Invalid request", http.StatusBadRequest)
-// 		return
-// 	}
+func (uh *UserHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request", http.StatusBadRequest)
+		return
+	}
 
-// 	user, err := GetUserByUsername(req.Username)
-// 	if err != nil {
-// 		http.Error(w, "User not found", http.StatusUnauthorized)
-// 		return
-// 	}
+	user, err := uh.user_repository.FindByUsername(req.Username)
+	if user.Email == "" && err == nil {
+		// http.Error(w, "User not found", http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{"Verification Status": "User not found ❌"})
+		return
+	}
 
-// 	if err := user.CheckPassword(req.Password); err != nil {
-// 		http.Error(w, "Invalid password", http.StatusUnauthorized)
-// 		return
-// 	}
+	if err := uh.userService.CheckPassword(req); err != nil {
+		// http.Error(w, "Invalid password", http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{"Verification Status": "Invalid password ❌"})
+		return
+	}
 
-// 	token, err := GenerateJWT(user.ID)
-// 	if err != nil {
-// 		http.Error(w, "Failed to generate token", http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	w.WriteHeader(http.StatusOK)
-// 	json.NewEncoder(w).Encode(map[string]string{"token": token})
-// }
+	json.NewEncoder(w).Encode(map[string]string{"Verification Status": "Verified ✅"})
+}
 
 // func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
 // 	authHeader := r.Header.Get("Authorization")

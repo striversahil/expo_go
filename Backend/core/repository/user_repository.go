@@ -42,6 +42,13 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
     return &user, err
 }
 
+func (r *UserRepository) FindByUsername(username string) (*model.User, error) {
+    // Fetch user by email
+    var user model.User
+    err := r.db.QueryRow("SELECT id, name, email, password FROM users WHERE name = $1", username).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+    return &user, err
+}
+
 
 // func (u *User) HashPassword(password string) error {
 // 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
