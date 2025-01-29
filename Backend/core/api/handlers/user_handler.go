@@ -25,18 +25,19 @@ func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
+	// New Decoder takes what to decode and put's it in the struct by Decode
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
-
+	
 	if req.Username == "" || req.Email == "" || req.Password == "" {
 		http.Error(w, "Missing required fields", http.StatusBadRequest)
 		return
 	}
-
+	
 	user_info := &model.User{Name: req.Username, Email: req.Email, Password: req.Password}
-
+	
 	user , err := uh.userService.CreateUser(user_info)
 	if err != nil {
 		http.Error(w, "Failed to create user", http.StatusInternalServerError)
@@ -44,7 +45,7 @@ func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
 }
 

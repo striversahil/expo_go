@@ -21,13 +21,10 @@ func (s *UserService) CreateUser(user *model.User) (*model.User, error) {
     // Business logic (e.g., validation)
     // Checking if user already exists
     userexist , err := s.repo.FindByEmail(user.Email) 
-    if userexist.Email != "" {
+    if userexist.Email != "" && err == nil {
         return nil, errors.New("user already exists")
     }
-    // if err != nil {
-    //     return nil, err
-    // }
-    // Save user to the database
+
     err = s.repo.Save(user)
     if err != nil {
         return nil, err
