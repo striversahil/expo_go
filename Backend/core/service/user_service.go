@@ -35,10 +35,10 @@ func (s *UserService) GetUser(user *model.User) (*model.User, error) {
     // Business logic (e.g., validation)
     // Checking if user already exists
     userexist , err := s.repo.FindByEmail(user.Email) 
-    if userexist.Email == "" && err == nil {
-        return nil, errors.New("user not found")
+    if err != nil {
+        return nil, errors.New(("user not found"))
     }
-    
+
     return userexist, nil
 }
 
