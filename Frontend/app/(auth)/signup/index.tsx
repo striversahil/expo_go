@@ -34,10 +34,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
 
   return (
     <View className="bg-[#090c54] px-5 h-screen" style={styles.container}>
-      <Text
-        onPress={() => navigation.navigate("Signup")}
-        className="text-white"
-      >
+      <Text onPress={() => navigation.navigate("Login")} className="text-white">
         Click Here
       </Text>
       <View className="w-full h-2/3 flex flex-col justify-around px-5 rounded-2xl border border-yellow-400 shadow-2xl bg-slate-950">
