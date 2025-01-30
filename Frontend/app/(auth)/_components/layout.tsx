@@ -2,21 +2,13 @@
 
 import { Text, View, Button, StyleSheet, Image } from "react-native";
 
-import { Collapsible } from "@/components/Collapsible";
-import { ExternalLink } from "@/components/ExternalLink";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { HelloWave } from "@/components/HelloWave";
-
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import LinearGradient from "react-native-linear-gradient";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput } from "react-native-paper";
+import { Link } from "expo-router";
 
-export default function TabsScreen() {
+export default function LoginScreen(screen: any) {
   const userSchema = z.object({
     username: z
       .string()
@@ -41,26 +33,29 @@ export default function TabsScreen() {
   };
 
   return (
-    <View className="bg-[#090c54] px-5" style={styles.container}>
-      <View className="w-full h-2/3 flex flex-col justify-around px-5 rounded-2xl border border-white shadow-2xl bg-slate-950">
-        <View className="w-full flex items-center">
+    <View className="bg-[#090c54] px-5 h-screen" style={styles.container}>
+      <View className="w-full h-2/3 flex flex-col justify-around px-5 rounded-2xl border border-yellow-400 shadow-2xl bg-slate-950">
+        <View className="w-full flex max-h-[30%] items-center mb-5">
           <Image
             source={require("@/assets/images/brand.png")}
             className="scale-[0.6]"
           />
+          <Link href={"/signup"}>
+            <Text className="text-white">hello click</Text>
+          </Link>
           <Text className="text-white text-4xl font-bold mb-2">Sign Up</Text>
-          <Text className="text-gray-300">
+          <Text className="text-gray-200">
             Head Start and Create Your Account with us. 🚀
           </Text>
         </View>
-        <View className="flex flex-col justify-around ">
+        <View className="flex flex-col justify-around items-center bg-white/10 py-5 rounded-2xl ">
           <Controller
             control={control}
             render={({
               field: { onChange, onBlur, value },
               fieldState: { error },
             }) => (
-              <View className="">
+              <View className="w-2/3">
                 <TextInput
                   mode="outlined"
                   label="Username"
@@ -91,7 +86,7 @@ export default function TabsScreen() {
                 onChangeText={onChange}
                 value={value}
                 activeOutlineColor={error ? "red" : "black"}
-                className=" "
+                className="w-2/3"
               />
             )}
             name="email"
@@ -120,7 +115,7 @@ export default function TabsScreen() {
                 placeholder=""
                 keyboardType="numeric"
                 activeOutlineColor={error ? "red" : "black"}
-                className=""
+                className="w-2/3"
               />
             )}
             name="age"
@@ -129,8 +124,14 @@ export default function TabsScreen() {
             <Text style={{ color: "#ff8566" }}>{errors.age.message}</Text>
           )}
         </View>
-
-        <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+        <View
+          className="w-full justify-center bg-blue-500 rounded-lg h-12 mt-5 mb-5"
+          onTouchEndCapture={handleSubmit(onSubmit)}
+        >
+          <Text className="text-white text-center text-2xl font-bold">
+            Sign Up
+          </Text>
+        </View>
       </View>
     </View>
   );
