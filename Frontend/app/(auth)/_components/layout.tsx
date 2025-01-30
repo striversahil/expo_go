@@ -52,30 +52,28 @@ export default function LoginScreen({ screen }: Props) {
           </Text>
         </View>
         <View className="flex flex-col justify-around items-center bg-white/10 py-5 rounded-2xl ">
-          <Controller
-            control={control}
-            render={({
-              field: { onChange, onBlur, value },
-              fieldState: { error },
-            }) => (
-              <View className="w-2/3">
-                <TextInput
-                  mode="outlined"
-                  label="Username"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  activeOutlineColor={error ? "red" : "black"}
-                  className=""
-                />
-              </View>
-            )}
-            name="username"
-          />
-          {errors.username && (
-            <Text style={{ color: "#ff8566" }}>{errors.username.message}</Text>
-          )}
-
+          {screen === "Signup" ? (
+            <Controller
+              control={control}
+              render={({
+                field: { onChange, onBlur, value },
+                fieldState: { error },
+              }) => (
+                <View className="w-2/3">
+                  <TextInput
+                    mode="outlined"
+                    label="Username"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    activeOutlineColor={error ? "red" : "black"}
+                    className=""
+                  />
+                </View>
+              )}
+              name="username"
+            />
+          ) : null}
           <Controller
             control={control}
             render={({
