@@ -14,6 +14,7 @@ import "../global.css";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import AppNavigator from "./_navigator/navigator";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -35,9 +36,12 @@ export default function RootLayout() {
   }
 
   return (
-    <NavigationIndependentTree>
+    <SafeAreaView style={{ flex: 1, height: "100%" }}>
       <AppNavigator />
-    </NavigationIndependentTree>
-    // <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    </SafeAreaView>
   );
 }
+
+// <NavigationIndependentTree>
+// </NavigationIndependentTree>
+// <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
