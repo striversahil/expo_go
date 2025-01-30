@@ -17,9 +17,12 @@ export default function LoginScreen({ screen }: Props) {
     username: z
       .string()
       .min(5, { message: "Username must be at least 5 characters." })
-      .max(30, { message: "Username must be at most 30 characters." }),
+      .max(30, { message: "Username must be at most 30 characters." })
+      .optional(),
     email: z.string().email({ message: "Please enter a valid email address." }),
-    age: z.number().min(18, { message: "You must be over 18 years old." }),
+    password: z
+      .string()
+      .min(4, { message: "Password must be at least 4 characters." }),
   });
 
   type UserFormType = z.infer<typeof userSchema>;
@@ -92,7 +95,7 @@ export default function LoginScreen({ screen }: Props) {
             )}
             name="email"
           />
-          {errors.email && (
+          {screen === "Signup" && errors.email && (
             <Text style={{ color: "#ff8566" }}>{errors.email.message}</Text>
           )}
 
@@ -104,12 +107,9 @@ export default function LoginScreen({ screen }: Props) {
             }) => (
               <TextInput
                 mode="outlined"
-                label="Age"
+                label="Password"
                 onBlur={onBlur}
-                onChangeText={(text) => {
-                  const parsed = parseInt(text, 10);
-                  onChange(isNaN(parsed) ? "" : parsed);
-                }}
+                onChangeText={onChange}
                 value={
                   value === null || value === undefined ? "" : value.toString()
                 }
@@ -119,10 +119,10 @@ export default function LoginScreen({ screen }: Props) {
                 className="w-2/3"
               />
             )}
-            name="age"
+            name="password"
           />
-          {errors.age && (
-            <Text style={{ color: "#ff8566" }}>{errors.age.message}</Text>
+          {errors.password && (
+            <Text style={{ color: "#ff8566" }}>{errors.password.message}</Text>
           )}
         </View>
         <View
