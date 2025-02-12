@@ -4,6 +4,7 @@ package main
 
 import (
 	"log"
+	"myapp/cmd/database"
 	"myapp/cmd/routes"
 	"myapp/core/config"
 	"net/http"
@@ -24,6 +25,9 @@ func main() {
     if err != nil {
         log.Fatal(err)
     }
+
+    
+    database.InitDb(cfg)
 
 
     // Define routes
