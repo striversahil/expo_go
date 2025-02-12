@@ -3,9 +3,6 @@ package repository
 
 import (
 	"database/sql"
-	"fmt"
-	// "log"
-	"myapp/core/config"
 	"myapp/core/model"
 
 	_ "github.com/lib/pq"
@@ -13,27 +10,17 @@ import (
 )
 
 type UserRepository struct {
-    db *sql.DB
+    DB *sql.DB
 }
 
-func NewUserRepository(config *config.Config ) *UserRepository {
-    databaseURL := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-     config.DbHost, config.DbPort, config.DbUser, config.DbPassword, config.DbName)
-    db, err := sql.Open("postgres", databaseURL)
-    if err != nil {
-        panic(err)
-    }
-    _ , err = db.Exec("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), password VARCHAR(255) , token VARCHAR(255))")
-    if err != nil {
-        panic(err)
-    }
-    return &UserRepository{db: db}   //It's like referencing back to struct like save this to UserRepository struct for next function Operations
+func NewUserRepository( db *sql.DB ) *UserRepository {
+    return &UserRepository{DB: db}   //It's like referencing back to struct like save this to UserRepository struct for next function Operations
 }
 
 
 func (r *UserRepository) Save(user *model.User) error {
     // Save user to the database
-    _, err := r.db.Exec("INSERT INTO users (name, email, password , token) VALUES ($1, $2, $3 , $4)", user.Name, user.Email, user.Password , user.Token)
+    _, err := r.DB.Exec("INSERT INTO users (name, email, password , token) VALUES ($1, $2, $3 , $4)", user.Name, user.Email, user.Password , user.Token)
     return err
 }
 
@@ -41,7 +28,7 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
     // Fetch user by email
     var user model.User
     // log.Default().Println(email , user)
-    err := r.db.QueryRow("SELECT * FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password , &user.Token)  
+    err := r.DB.QueryRow("SELECT * FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password , &user.Token)  
      //Save user to the Query to user Model Just reffered
     // log.Default().Println(err)
     return &user, err

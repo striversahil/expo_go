@@ -26,7 +26,7 @@ func main() {
         log.Fatal(err)
     }
 
-    
+
     database.InitDb(cfg)
 
 
@@ -39,7 +39,7 @@ func main() {
     //     w.Write([]byte(`{"fucking message": "Welcome to myapp from Mux Router", "version": "1.0", "status": "OK"}`))
     //     }).Methods("GET")
         
-    routes.UserRoutes(r, cfg)
+    routes.UserRoutes(r, cfg , database.DB)
 
 
     // Start the server
