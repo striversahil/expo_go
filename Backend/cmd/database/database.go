@@ -33,10 +33,19 @@ func InitDb(config *config.Config ) {
 	);
 	CREATE TABLE IF NOT EXISTS Goals (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		goal TEXT,
 		user_id INTEGER,
-		Goal Title TEXT,
-		Chapter JSONB,
-		FOREIGN KEY(user_id) REFERENCES Users(id)
-	);`
+		chapters JSONB,
+		FOREIGN KEY(user_id) REFERENCES Users(id) ON DELETE CASCADE
+	);
+	CREATE TABLE IF NOT EXISTS Chapters (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		goal_id INTEGER,
+		name TEXT,
+		content TEXT,
+		FOREIGN KEY(goal_id) REFERENCES Goals(id) ON DELETE CASCADE
+	)
+	
+	`
 	DB.Exec(schema)
 }

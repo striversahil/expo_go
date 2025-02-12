@@ -5,9 +5,10 @@ package handlers
 import (
 	// "database/sql"
 	"encoding/json"
-	_"fmt"
+	_ "fmt"
+	"log"
+
 	// "errors"
-	_ "log"
 	"myapp/core/model"
 	"myapp/core/service"
 	"myapp/core/utils"
@@ -63,8 +64,9 @@ func (uh *UserHandler) LoginHandler( w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
-	
-	user, err := uh.userService.GetUser(&model.User{Email: req.Email})
+	log.Println("Here 1")
+	user, err := uh.userService.GetUser(req.Email)
+	log.Println("Here 2")
 	if err != nil {
 		// Handle other errors (e.g., database issues)
 		utils.ErrorResponse(w, "User not found", http.StatusInternalServerError)
@@ -82,21 +84,3 @@ func (uh *UserHandler) LoginHandler( w http.ResponseWriter, r *http.Request) {
 
 	utils.NewRespose(w, "Login successful", http.StatusOK, user)
 }
-
-// func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
-// 	authHeader := r.Header.Get("Authorization")
-// 	if authHeader == "" {
-// 		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
-// 		return
-// 	}
-
-// 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
-// 	token, err := ValidateJWT(tokenString)
-// 	if err != nil || !token.Valid {
-// 		http.Error(w, "Invalid token", http.StatusUnauthorized)
-// 		return
-// 	}
-
-// 	w.WriteHeader(http.StatusOK)
-// 	json.NewEncoder(w).Encode(map[string]string{"message": "You are authenticated"})
-// }
