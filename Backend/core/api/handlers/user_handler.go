@@ -5,6 +5,7 @@ package handlers
 import (
 	// "database/sql"
 	"encoding/json"
+	_"fmt"
 	// "errors"
 	_ "log"
 	"myapp/core/model"
@@ -21,9 +22,6 @@ type UserHandler struct {
 func NewUserHandler(userService *service.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
   }
-
-
-var jwtSecret = []byte("secret")
 
 
 
@@ -55,6 +53,7 @@ func (uh *UserHandler) RegisterHandler( w http.ResponseWriter, r *http.Request) 
 }
 
 func (uh *UserHandler) LoginHandler( w http.ResponseWriter, r *http.Request) {
+
 	var req struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`

@@ -4,12 +4,12 @@ package main
 
 import (
 	"log"
+	"myapp/cmd/routes"
 	"myapp/core/config"
 	"net/http"
-	"myapp/core/api/handlers"
-	"myapp/core/repository"
-	"myapp/core/service"
-    "github.com/joho/godotenv"
+
+	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -25,23 +25,20 @@ func main() {
         log.Fatal(err)
     }
 
-    // Set up the database repository
-    userRepo := repository.NewUserRepository(cfg)
-
-    // Set up the service (business logic)
-    userService := service.NewUserService(userRepo)
-
-    // Set up the HTTP handlers
-    userHandler := handlers.NewUserHandler(userService)
 
     // Define routes
-    http.HandleFunc("/signup", userHandler.RegisterHandler)
-    http.HandleFunc("/login", userHandler.LoginHandler)
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        w.Header().Set("Content-Type", "application/json")
-        w.Write([]byte(`{"message": "Welcome to myapp", "version": "1.0", "status": "OK"}`))
-    })
+    r := mux.NewRouter()
+
+    
+    // r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    //     w.Header().Set("Content-Type", "application/json")
+    //     w.Write([]byte(`{"fucking message": "Welcome to myapp from Mux Router", "version": "1.0", "status": "OK"}`))
+    //     }).Methods("GET")
+        
+    routes.UserRoutes(r, cfg)
+
+
     // Start the server
     log.Printf("Server is running on %s...\n", cfg.ServerHost)
-    log.Fatal(http.ListenAndServe(cfg.ServerHost, nil))
+    log.Fatal(http.ListenAndServe(cfg.ServerHost, r))
 }

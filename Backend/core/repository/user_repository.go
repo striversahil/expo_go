@@ -27,7 +27,7 @@ func NewUserRepository(config *config.Config ) *UserRepository {
     if err != nil {
         panic(err)
     }
-    return &UserRepository{db: db}
+    return &UserRepository{db: db}   //It's like referencing back to struct like save this to UserRepository struct for next function Operations
 }
 
 
@@ -41,7 +41,8 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
     // Fetch user by email
     var user model.User
     // log.Default().Println(email , user)
-    err := r.db.QueryRow("SELECT * FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password , &user.Token)
+    err := r.db.QueryRow("SELECT * FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password , &user.Token)  
+     //Save user to the Query to user Model Just reffered
     // log.Default().Println(err)
     return &user, err
 }

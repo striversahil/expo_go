@@ -29,8 +29,8 @@ func NewRespose(w http.ResponseWriter, message string, statusCode int, payload i
 
 	
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonResponse)
 	w.WriteHeader(statusCode)
+	w.Write(jsonResponse)
 }
 
 func ErrorResponse(w http.ResponseWriter, error_message string, statusCode int) {
