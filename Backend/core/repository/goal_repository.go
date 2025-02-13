@@ -3,7 +3,8 @@ package repository
 
 import (
 	"database/sql"
-	_"log"
+	"encoding/json"
+	_ "log"
 	"myapp/core/model"
 
 	_ "github.com/lib/pq"
@@ -19,20 +20,34 @@ func NewGoalRepository( db *sql.DB ) *GoalRepository {
 }
 
 
-func (r *GoalRepository) CreateGoal(user_id int , goal string , chapters []model.Chapter) error {
+func (r *GoalRepository) CreateGoal(user_id int , goal string , chapters []string) error {
     // Save user to the database
-    _, err := r.DB.Exec("INSERT INTO goals (user_id , goal, chapters) VALUES ($1, $2, $3 , $4)", user_id, goal, chapters)
+    chapters_Json , _ := json.Marshal(chapters)
+
+    _, err := r.DB.Exec("INSERT INTO goals (user_id , goal, chapters) VALUES ($1, $2, $3 )", user_id, goal, chapters_Json)
     return err
 }
 
-func (r *GoalRepository) FindById(id int) (*model.Goal, error) {
+func (r *GoalRepository) FetchGoalById(user_id int) ([]model.Goal, error) {
     // Fetch user by email
-    var user model.User
+    var goals []model.Goal
     // log.Default().Println(email , user)
-    err := r.DB.QueryRow("SELECT * FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password , &user.Token)  
-     //Save user to the Query to user Model Just reffered
-    // log.Default().Println(err)
-    return &user, err
+    rows , err := r.DB.Query("SELECT * FROM goals WHERE user_id = $1", user_id)  
+    if err != nil {
+        return nil, err
+    }
+    // Iterating on the rows of Goals
+    for rows.Next() {
+        var goal model.Goal
+        var ChaptersJson string
+        err := rows.Scan(&goal.ID, &goal.Goal, &goal.UserID, &ChaptersJson)
+        if err != nil {
+            return nil, err
+        }
+        json.Unmarshal([]byte(ChaptersJson), &goal.Chapters)
+        goals = append(goals, goal)
+    }
+    return goals, nil
 }
 
 
