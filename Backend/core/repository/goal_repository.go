@@ -36,7 +36,7 @@ func (r *GoalRepository) FetchGoalById(user_id int) ([]model.Goal, error) {
     if err != nil {
         return nil, err
     }
-    // Iterating on the rows of Goals
+    // Iterating on the rows of Goals 
     for rows.Next() {
         var goal model.Goal
         var ChaptersJson string
