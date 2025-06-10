@@ -1,2 +1,2 @@
 # Growex.ai ✨
-Your Personal Ai `Assistant` to get You Achieve Your `Goal`
+Your Personal AI `Platform` to get You Achieve Your `Goal`
