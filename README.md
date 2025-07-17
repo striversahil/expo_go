@@ -1,2 +1,1 @@
-# Growex.ai ✨
-Your Personal AI `Platform` to get You Achieve Your `Goal`
+### A temp repo for learning expo and go
